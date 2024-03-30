@@ -1,0 +1,8 @@
+#include "gromos54a7.ff/forcefield.itp"
+#include "gromos54a7.ff/spce.itp"
+
+[ system ]
+water box
+
+[ molecules ]
+SOL 884
