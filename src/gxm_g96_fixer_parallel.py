@@ -3,7 +3,8 @@ import sys
 import glob
 
 from libmol import WrongG96Mol
-import tqdm
+import psutil
+import multiprocessing as mp
 
 
 def _auto_backup(
@@ -51,5 +52,13 @@ if __name__ == "__main__":
 
     wrong_g96_list = sorted(glob.glob(wrong_g96))
 
-    for wrong_g96 in tqdm.tqdm(wrong_g96_list):
-        _fix(wrong_g96)
+    pool = mp.Pool(psutil.cpu_count(logical=False))
+
+    for wrong_g96 in wrong_g96_list:
+        pool.apply_async(
+            func=_fix,
+            args=(wrong_g96,),
+        )
+
+    pool.close()
+    pool.join()
