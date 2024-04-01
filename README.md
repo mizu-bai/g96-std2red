@@ -38,8 +38,9 @@ END
 ## Usage
 
 ```bash
-$ python3 /path/to/gmx_g96_fixer mol.g96 # only fix 1 g96 file
-$ python3 /path/to/gmx_g96_fixer *.g96 # fix all g96 file in current directory
+$ python3 gmx_g96_fixer.py mol.g96  # single wrong g96 file
+$ python3 gmx_g96_fixer.py mol1.g96 mol2.g96 ...  # a list of wrong g96 files
+$ python3 gmx_g96_fixer.py *.g96  # match by pattern
 ```
 
 ## Reference

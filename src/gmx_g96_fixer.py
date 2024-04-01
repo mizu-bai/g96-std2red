@@ -1,9 +1,9 @@
+import glob
+import multiprocessing as mp
 import os
 import sys
-import glob
 
 from libmol import WrongG96Mol
-import tqdm
 
 
 def _auto_backup(
@@ -39,17 +39,27 @@ def _fix(
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2 or sys.argv[1] == "-h" or sys.argv[1] == "--help":
         print(
             "Usage:\n"
-            f"$ python3 {os.path.basename(__file__)} mol.g96\n"
-            f"$ python3 {os.path.basename(__file__)} *.g96"
+            f"$ python3 {os.path.basename(__file__)} mol.g96  "
+            "# single wrong g96 file\n"
+            f"$ python3 {os.path.basename(__file__)} mol1.g96 mol2.g96 ...  "
+            "# a list of wrong g96 files\n"
+            f"$ python3 {os.path.basename(__file__)} *.g96  "
+            "# match by pattern"
         )
         exit()
 
-    wrong_g96 = sys.argv[1]
+    wrong_g96_list = sys.argv[1:]
 
-    wrong_g96_list = sorted(glob.glob(wrong_g96))
+    pool = mp.Pool()
 
-    for wrong_g96 in tqdm.tqdm(wrong_g96_list):
-        _fix(wrong_g96)
+    for wrong_g96 in wrong_g96_list:
+        pool.apply_async(
+            func=_fix,
+            args=(wrong_g96,),
+        )
+
+    pool.close()
+    pool.join()
